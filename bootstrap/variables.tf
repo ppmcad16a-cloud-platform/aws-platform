@@ -22,4 +22,26 @@ variable "aws_region" {
 variable "state_bucket_name" {
   description = "Globally unique S3 bucket name for Terraform state"
   type        = string
+  default     = "ppmcad16a-tfstate-722867460821-ap-south-1"
+}
+
+variable "github_org" {
+  type    = string
+  default = "ppmcad16a-cloud-platform"
+}
+
+variable "github_repo" {
+  description = "Repository whose GitHub Actions may use the roles"
+  type        = string
+  default     = "aws-platform"
+}
+
+variable "budget_usd" {
+  type    = number
+  default = 10
+}
+
+variable "alert_email" {
+  type    = string
+  default = "rishav1994sonai@gmail.com"
 }
