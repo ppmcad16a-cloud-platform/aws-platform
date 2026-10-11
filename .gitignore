@@ -1,0 +1,92 @@
+# ============================================================
+# Terraform - Local Working Directories
+# ============================================================
+
+# Terraform downloads providers and modules here.
+# These directories should never be committed.
+**/.terraform/
+
+
+# ============================================================
+# Terraform - State Files
+# ============================================================
+
+# State files may contain sensitive information.
+# Never commit local or backup Terraform state.
+*.tfstate
+*.tfstate.*
+
+
+# ============================================================
+# Terraform - Plan Files
+# ============================================================
+
+# Terraform binary execution plans may contain sensitive data.
+*.tfplan
+*.tfplan.json
+tfplan
+tfplan.*
+
+
+# ============================================================
+# Terraform - Sensitive Variables
+# ============================================================
+
+# Local variable values may contain credentials or secrets.
+*.tfvars
+*.tfvars.json
+
+
+# ============================================================
+# Terraform - Crash Logs
+# ============================================================
+
+crash.log
+crash.*.log
+
+
+# ============================================================
+# Terraform - Override Files
+# ============================================================
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+
+# ============================================================
+# AWS Credentials and Secrets
+# ============================================================
+
+# Prevent accidentally committing local AWS credentials.
+.aws/
+credentials
+credentials.old.bak
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local environment files.
+.env
+.env.*
+!.env.example
+
+
+# ============================================================
+# IDE / OS Files
+# ============================================================
+
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+
+# ============================================================
+# IMPORTANT: Terraform Provider Lock File
+# ============================================================
+
+# DO NOT ignore .terraform.lock.hcl
+# Commit it to keep provider versions consistent.
