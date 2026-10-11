@@ -1,6 +1,5 @@
 provider "aws" {
   region  = "ap-south-1"
-  profile = "platform-admin-shuaib"
 
   default_tags {
     tags = {
