@@ -1,10 +1,11 @@
 provider "aws" {
-  region  = "ap-south-1"
+  region = var.aws_region
 
   default_tags {
     tags = {
       Project     = "ppmcad16a-cloud-platform"
-      Environment = "dev"
+      Environment = "prod"
+      Stack       = "cluster"
       ManagedBy   = "Terraform"
     }
   }
