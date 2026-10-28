@@ -22,3 +22,11 @@ module "eks" {
   instance_type        = var.instance_type
   capacity_type        = var.capacity_type
 }
+
+# Fixed public IP for the web entrance (Cloudflare's origin for AWS).
+resource "aws_eip" "ingress" {
+  domain = "vpc"
+  tags = {
+    Name = "eip-prod-ingress"
+  }
+}
