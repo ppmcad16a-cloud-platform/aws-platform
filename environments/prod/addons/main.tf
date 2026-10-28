@@ -68,11 +68,28 @@ resource "time_sleep" "lb_cleanup" {
   depends_on       = [helm_release.aws_lbc, helm_release.envoy_gateway]
 }
 
-# Teardown safety: on DESTROY, after Prometheus/Loki are removed, wait 60s
-# while the EBS CSI driver is still running so it can delete their disks.
-resource "time_sleep" "volume_cleanup" {
-  destroy_duration = "60s"
-  depends_on       = [aws_eks_addon.ebs_csi, helm_release.platform_config]
+# Teardown safety: on DESTROY, after Prometheus/Loki are removed, WAIT until
+# Kubernetes has actually deleted their disks (PersistentVolumes) - while the
+# EBS CSI driver is still running. Prometheus may take minutes to stop, so we
+# wait for the real event instead of guessing a duration.
+#
+# A destroy-time provisioner runs a command on YOUR machine when this resource
+# is destroyed. It uses its own temporary kubeconfig (inside .terraform/, which
+# git ignores), so it always talks to the right cluster.
+resource "terraform_data" "volume_cleanup" {
+  input = {
+    cluster = var.cluster_name
+    region  = var.aws_region
+    config  = "${path.module}/.terraform/kubeconfig-destroy"
+  }
+
+  provisioner "local-exec" {
+    when       = destroy
+    command    = "aws eks update-kubeconfig --name ${self.input.cluster} --region ${self.input.region} --kubeconfig ${self.input.config} && kubectl --kubeconfig ${self.input.config} wait --for=delete pv --all --timeout=900s"
+    on_failure = continue # e.g. "no PVs left" - nothing to wait for, carry on
+  }
+
+  depends_on = [aws_eks_addon.ebs_csi, helm_release.platform_config]
 }
 
 resource "helm_release" "platform_config" {
