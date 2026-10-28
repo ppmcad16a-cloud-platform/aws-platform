@@ -68,6 +68,13 @@ resource "time_sleep" "lb_cleanup" {
   depends_on       = [helm_release.aws_lbc, helm_release.envoy_gateway]
 }
 
+# Teardown safety: on DESTROY, after Prometheus/Loki are removed, wait 60s
+# while the EBS CSI driver is still running so it can delete their disks.
+resource "time_sleep" "volume_cleanup" {
+  destroy_duration = "60s"
+  depends_on       = [aws_eks_addon.ebs_csi, helm_release.platform_config]
+}
+
 resource "helm_release" "platform_config" {
   name      = "platform-config"
   chart     = "${path.module}/charts/platform-config"

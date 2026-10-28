@@ -21,7 +21,7 @@ resource "helm_release" "kube_prometheus_stack" {
   create_namespace = true
   wait             = true
   timeout          = 900
-  depends_on       = [helm_release.platform_config]
+  depends_on       = [time_sleep.volume_cleanup]
 
   values = [templatefile("${path.module}/values/kube-prometheus-stack.yaml.tftpl", local.template_vars)]
 
@@ -44,7 +44,7 @@ resource "helm_release" "loki" {
   timeout    = 600
 
   values     = [templatefile("${path.module}/values/loki.yaml.tftpl", local.template_vars)]
-  depends_on = [helm_release.kube_prometheus_stack] # namespace + ServiceMonitor CRD
+  depends_on = [helm_release.kube_prometheus_stack, time_sleep.volume_cleanup] # namespace + ServiceMonitor CRD
 }
 
 resource "helm_release" "alloy" {
