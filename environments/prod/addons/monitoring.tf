@@ -18,7 +18,7 @@ resource "helm_release" "kube_prometheus_stack" {
   chart            = "kube-prometheus-stack"
   version          = "92.6.0"
   namespace        = "monitoring"
-  create_namespace = true
+  create_namespace = false # created (with labels) by platform-config
   wait             = true
   timeout          = 900
   depends_on       = [terraform_data.volume_cleanup]
