@@ -133,6 +133,11 @@ resource "helm_release" "platform_config" {
         name     = "mern-deployers"
       },
     ]
+    # Prometheus + Loki for the central Grafana (+ Slack for Alertmanager).
+    observability = {
+      backendsHostname = "obs-azure.rishavmukhopadhyay.store" # aws-platform: "obs-aws.rishavmukhopadhyay.store"
+    }
+
   })]
 
   depends_on = [

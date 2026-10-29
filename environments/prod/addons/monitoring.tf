@@ -70,3 +70,11 @@ resource "helm_release" "opencost" {
   values     = [templatefile("${path.module}/values/opencost.yaml.tftpl", local.template_vars)]
   depends_on = [helm_release.kube_prometheus_stack]
 }
+
+# The shop's recording rules + alerts from the shared
+# observability-platform repo - the SAME tagged version in every cloud.
+module "mern_observability" {
+  source     = "git::https://github.com/ppmcad16a-cloud-platform/observability-platform.git//modules/mern-observability?ref=v1.0.0"
+  cloud      = "aws"
+  depends_on = [helm_release.kube_prometheus_stack]
+}
