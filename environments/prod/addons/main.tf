@@ -126,6 +126,13 @@ resource "helm_release" "platform_config" {
         encrypted = "true"
       }
     }
+    deployerSubjects = [
+      {
+        kind     = "Group"
+        apiGroup = "rbac.authorization.k8s.io"
+        name     = "mern-deployers"
+      },
+    ]
   })]
 
   depends_on = [

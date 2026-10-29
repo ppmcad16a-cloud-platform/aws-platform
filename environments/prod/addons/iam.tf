@@ -99,3 +99,18 @@ resource "aws_eks_addon" "ebs_csi" {
     service_account = "ebs-csi-controller-sa"
   }
 }
+
+# ---------------------------------------------------------------
+# 4. Jenkins (from GKE): enters the cluster as group "mern-deployers"
+#    (bound to the mern-deployer Role by the platform-config chart)
+# ---------------------------------------------------------------
+data "aws_iam_role" "jenkins_deployer" {
+  name = "jenkins-deployer-from-gke"
+}
+
+resource "aws_eks_access_entry" "jenkins" {
+  cluster_name      = var.cluster_name
+  principal_arn     = data.aws_iam_role.jenkins_deployer.arn
+  kubernetes_groups = ["mern-deployers"]
+  type              = "STANDARD"
+}
