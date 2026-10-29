@@ -98,6 +98,11 @@ resource "aws_eks_addon" "ebs_csi" {
     role_arn        = aws_iam_role.ebs_csi.arn
     service_account = "ebs-csi-controller-sa"
   }
+
+  # Keep the driver's permission until the driver itself is gone. Without this,
+  # destroy detaches the policy first, the driver can no longer delete the
+  # Prometheus/Loki disks, and they are left behind (and billed).
+  depends_on = [aws_iam_role_policy_attachment.ebs_csi]
 }
 
 # ---------------------------------------------------------------
