@@ -42,6 +42,12 @@ data "aws_iam_policy_document" "jenkins_deployer" {
     actions   = ["eks:DescribeCluster"]
     resources = ["arn:aws:eks:${var.aws_region}:${data.aws_caller_identity.current.account_id}:cluster/prod-eks"]
   }
+  # ... and read the node group's size: 0 nodes = a sleeping standby, which
+  # the pipeline skips instead of failing (stopped-standby failover).
+  statement {
+    actions   = ["eks:DescribeNodegroup"]
+    resources = ["arn:aws:eks:${var.aws_region}:${data.aws_caller_identity.current.account_id}:nodegroup/prod-eks/default/*"]
+  }
 }
 
 resource "aws_iam_role_policy" "jenkins_deployer" {
