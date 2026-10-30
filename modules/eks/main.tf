@@ -125,6 +125,14 @@ resource "aws_eks_node_group" "default" {
     pool = "default"
   }
 
+  # Sleep/wake (stopped standby) is done by platform-automation's standby.yml
+  # and wake.yml, like starting/stopping an EC2 instance. Terraform creates
+  # the group with min_nodes, then leaves the node COUNT alone - otherwise
+  # the next plan would wake a sleeping standby by itself.
+  lifecycle {
+    ignore_changes = [scaling_config[0].desired_size, scaling_config[0].min_size]
+  }
+
   depends_on = [aws_iam_role_policy_attachment.node]
 }
 
