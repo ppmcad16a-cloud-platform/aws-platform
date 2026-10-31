@@ -143,7 +143,7 @@ resource "aws_eks_addon" "vpc_cni" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "vpc-cni"
   resolve_conflicts_on_create = "OVERWRITE"
-  # Turn on enforcement of Kubernetes NetworkPolicies (Phase 6).
+  # Turn on enforcement of Kubernetes NetworkPolicies.
   configuration_values = jsonencode({
     enableNetworkPolicy = "true"
   })
