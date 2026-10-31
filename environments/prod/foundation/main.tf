@@ -6,7 +6,7 @@ module "ecr" {
 }
 
 # ---------------------------------------------------------------
-# Database backups (Phase 10): private, encrypted, versioned, 30 days
+# Database backups: private, encrypted, versioned, 30 days
 # ---------------------------------------------------------------
 resource "aws_s3_bucket" "backups" {
   bucket = "ppmcad16a-mongo-backups-${data.aws_caller_identity.current.account_id}-${var.aws_region}"
